@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>تشخیص اپراتور و شهر دقیق شماره موبایل ایران</title>
+<style>
+  body {
+    font-family: Tahoma, sans-serif;
+    direction: rtl;
+    text-align: right;
+    padding: 40px;
+    background: #eef2f7;
+  }
+  h2 {
+    color: #2c3e50;
+  }
+  input {
+    padding: 12px;
+    font-size: 16px;
+    width: 300px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  #result {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  .valid { color: green; }
+  .invalid { color: red; }
+</style>
+</head>
+<body>
+<h2>تشخیص اپراتور و شهر دقیق شماره موبایل ایران</h2>
+<input type="text" id="phoneNumber" placeholder="شماره موبایل را وارد کنید" oninput="checkOperatorCity()">
+<div id="result"></div>
+
+<script>
+// دیکشنری پیش‌شماره -> [اپراتور, شهر دقیق]
+// شامل اکثر پیش‌شماره‌های موبایل ایران
+const PREFIX_INFO = {
+  // همراه اول
+  "0910":["همراه اول","تهران"],"0911":["همراه اول","تهران"],"0912":["همراه اول","تهران"],
+  "0913":["همراه اول","تهران"],"0914":["همراه اول","اصفهان"],"0915":["همراه اول","مشهد"],
+  "0916":["همراه اول","تبریز"],"0917":["همراه اول","شیراز"],"0918":["همراه اول","کرج"],
+  "0919":["همراه اول","اهواز"],"0990":["همراه اول","سراسر کشور"],"0991":["همراه اول","سراسر کشور"],
+  "0992":["همراه اول","سراسر کشور"],"0993":["همراه اول","سراسر کشور"],"0994":["همراه اول","سراسر کشور"],
+  
+  // ایرانسل
+  "0901":["ایرانسل","تهران"],"0902":["ایرانسل","اصفهان"],"0903":["ایرانسل","مشهد"],
+  "0904":["ایرانسل","تبریز"],"0905":["ایرانسل","شیراز"],"0930":["ایرانسل","سراسر کشور"],
+  "0933":["ایرانسل","سراسر کشور"],"0935":["ایرانسل","سراسر کشور"],"0936":["ایرانسل","سراسر کشور"],
+  "0937":["ایرانسل","سراسر کشور"],"0938":["ایرانسل","سراسر کشور"],"0939":["ایرانسل","سراسر کشور"],
+
+  // رایتل
+  "0920":["رایتل","تهران"],"0921":["رایتل","اصفهان"],"0922":["رایتل","مشهد"],"0923":["رایتل","تبریز"],
+
+  // اپراتورهای منطقه‌ای / MVNO
+  "0931":["اسپادان","اصفهان"],"0932":["تالیا","سراسر کشور"],"0934":["تله‌کیش","کیش"],
+  "0955":["مبین‌نت","سراسر کشور"],"0998":["شاتل موبایل","سراسر کشور"],"0999":["اپراتور مجازی","سراسر کشور"]
+};
+
+// تابع نرمالایز کردن شماره
+function normalizeNumber(num){
+  let n=num.replace(/\D/g,"");
+  if(n.startsWith("0098")) n="0"+n.slice(4);
+  else if(n.startsWith("98")) n="0"+n.slice(2);
+  if(!n.startsWith("0") && n.length===10) n="0"+n;
+  return n;
+}
+
+// تایپ زنده و بررسی اپراتور و شهر
+function checkOperatorCity(){
+  const input=document.getElementById("phoneNumber").value;
+  const n=normalizeNumber(input);
+  const resultDiv=document.getElementById("result");
+
+  if(n.length===0){
+    resultDiv.innerHTML="";
+    return;
+  }
+
+  if(!/^09\d{9}$/.test(n)){
+    resultDiv.innerHTML=<span class="invalid">شماره معتبر نیست: ${n}</span>;
+    return;
+  }
+
+  const prefix4=n.slice(0,4);
+  const prefix3=n.slice(0,3);
+  const info=PREFIX_INFO[prefix4]||PREFIX_INFO[prefix3];
+
+  if(info){
+    resultDiv.innerHTML=<span class="valid">اپراتور: ${info[0]}, شهر دقیق: ${info[1]}</span>;
+  } else{
+    resultDiv.innerHTML=<span class="invalid">اپراتور یا شهر ناشناخته</span>;
+  }
+}
+</script>
+</body>
+</html>
