@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>تشخیص اپراتور و شهر دقیق شماره موبایل ایران</title>
+<title>تشخیص اپراتور و شهر شماره موبایل ایران</title>
 <style>
   body {
     font-family: Tahoma, sans-serif;
@@ -22,6 +22,18 @@
     border: 1px solid #ccc;
     border-radius: 6px;
   }
+  button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #34495e;
+  }
   #result {
     margin-top: 20px;
     font-weight: bold;
@@ -32,36 +44,32 @@
 </style>
 </head>
 <body>
-<h2>تشخیص اپراتور و شهر دقیق شماره موبایل ایران</h2>
-<input type="text" id="phoneNumber" placeholder="شماره موبایل را وارد کنید" oninput="checkOperatorCity()">
+<h2>تشخیص اپراتور و شهر شماره موبایل ایران</h2>
+<input type="text" id="phoneNumber" placeholder="شماره موبایل را وارد کنید">
+<button id="checkBtn">تایید</button>
 <div id="result"></div>
 
 <script>
-// دیکشنری پیش‌شماره -> [اپراتور, شهر دقیق]
-// شامل اکثر پیش‌شماره‌های موبایل ایران
+// دیکشنری پیش‌شماره -> [اپراتور, شهر]
 const PREFIX_INFO = {
-  // همراه اول
   "0910":["همراه اول","تهران"],"0911":["همراه اول","تهران"],"0912":["همراه اول","تهران"],
   "0913":["همراه اول","تهران"],"0914":["همراه اول","اصفهان"],"0915":["همراه اول","مشهد"],
   "0916":["همراه اول","تبریز"],"0917":["همراه اول","شیراز"],"0918":["همراه اول","کرج"],
   "0919":["همراه اول","اهواز"],"0990":["همراه اول","سراسر کشور"],"0991":["همراه اول","سراسر کشور"],
   "0992":["همراه اول","سراسر کشور"],"0993":["همراه اول","سراسر کشور"],"0994":["همراه اول","سراسر کشور"],
   
-  // ایرانسل
   "0901":["ایرانسل","تهران"],"0902":["ایرانسل","اصفهان"],"0903":["ایرانسل","مشهد"],
   "0904":["ایرانسل","تبریز"],"0905":["ایرانسل","شیراز"],"0930":["ایرانسل","سراسر کشور"],
   "0933":["ایرانسل","سراسر کشور"],"0935":["ایرانسل","سراسر کشور"],"0936":["ایرانسل","سراسر کشور"],
   "0937":["ایرانسل","سراسر کشور"],"0938":["ایرانسل","سراسر کشور"],"0939":["ایرانسل","سراسر کشور"],
 
-  // رایتل
   "0920":["رایتل","تهران"],"0921":["رایتل","اصفهان"],"0922":["رایتل","مشهد"],"0923":["رایتل","تبریز"],
 
-  // اپراتورهای منطقه‌ای / MVNO
   "0931":["اسپادان","اصفهان"],"0932":["تالیا","سراسر کشور"],"0934":["تله‌کیش","کیش"],
   "0955":["مبین‌نت","سراسر کشور"],"0998":["شاتل موبایل","سراسر کشور"],"0999":["اپراتور مجازی","سراسر کشور"]
 };
 
-// تابع نرمالایز کردن شماره
+// نرمال‌سازی شماره
 function normalizeNumber(num){
   let n=num.replace(/\D/g,"");
   if(n.startsWith("0098")) n="0"+n.slice(4);
@@ -70,7 +78,7 @@ function normalizeNumber(num){
   return n;
 }
 
-// تایپ زنده و بررسی اپراتور و شهر
+// بررسی شماره و نمایش نتیجه
 function checkOperatorCity(){
   const input=document.getElementById("phoneNumber").value;
   const n=normalizeNumber(input);
@@ -91,11 +99,14 @@ function checkOperatorCity(){
   const info=PREFIX_INFO[prefix4]||PREFIX_INFO[prefix3];
 
   if(info){
-    resultDiv.innerHTML=<span class="valid">اپراتور: ${info[0]}, شهر دقیق: ${info[1]}</span>;
+    resultDiv.innerHTML=<span class="valid">اپراتور: ${info[0]}, شهر: ${info[1]}</span>;
   } else{
     resultDiv.innerHTML=<span class="invalid">اپراتور یا شهر ناشناخته</span>;
   }
 }
+
+// وصل کردن دکمه به تابع
+document.getElementById("checkBtn").addEventListener("click", checkOperatorCity);
 </script>
 </body>
 </html>
